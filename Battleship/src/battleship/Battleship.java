@@ -1,20 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Battleship.java -    Battleship main class
+ * @author		Kam Talebzadeh
+ * @date		January 28, 2016
  */
 
-/**
- *
- * @author Behrad
- */
+package battleship;
+
+import javax.swing.JFrame;
+
 public class Battleship {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Create frame to call BattleshipUI class
+        JFrame frame = new BattleshipUI();
     }
-    
 }
