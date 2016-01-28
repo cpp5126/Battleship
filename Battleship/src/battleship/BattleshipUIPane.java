@@ -42,15 +42,15 @@ public class BattleshipUIPane extends JPanel {
                 // Looped through a second time based on columns to check which sides need a line
                 if (row < 9) {
                     if (col < 9) {
-                        border = new MatteBorder(1, 1, 0, 0, Color.GRAY);
+                        border = new MatteBorder(1, 1, 0, 0, Color.BLACK);
                     } else {
-                        border = new MatteBorder(1, 1, 0, 1, Color.GRAY);
+                        border = new MatteBorder(1, 1, 0, 1, Color.BLACK);
                     }
                 }else{
                     if (col < 9) {
-                        border = new MatteBorder(1, 1, 1, 0, Color.GRAY);
+                        border = new MatteBorder(1, 1, 1, 0, Color.BLACK);
                     } else {
-                        border = new MatteBorder(1, 1, 1, 1, Color.GRAY);
+                        border = new MatteBorder(1, 1, 1, 1, Color.BLACK);
                     }
                 }
                 // Set border to mouse adapter for that grid block

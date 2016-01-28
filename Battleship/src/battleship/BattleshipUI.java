@@ -15,7 +15,7 @@ public class BattleshipUI extends JFrame{
     // Initialize variables
     private JMenuBar menuBar;
     private JMenu menu1;
-    private JMenuItem menuItem;
+    private JMenuItem menuItem1, menuItem2;
     
     /**
      * Creates the frame for the battleship board
@@ -54,9 +54,11 @@ public class BattleshipUI extends JFrame{
         menuBar.add(menu1);
         
         // Create pause option for a menu
-        menuItem = new JMenuItem("Pause", KeyEvent.VK_T);
-        // Add menu item to "File" menu
-        menu1.add(menuItem);
+        menuItem1 = new JMenuItem("Pause", KeyEvent.VK_T);
+        menuItem2 = new JMenuItem("Restart");
+        // Add menu items to "File" menu
+        menu1.add(menuItem1);
+        menu1.add(menuItem2);
         
         // Add menu bar to Frame
         setJMenuBar(menuBar);

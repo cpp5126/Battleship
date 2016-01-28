@@ -12,7 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
-public class BattleshipUIMouse extends JPanel {
+public class BattleshipUIMouse extends JPanel {    
     // Initialize variable for original color
     private Color defaultBackground;
     
@@ -20,6 +20,10 @@ public class BattleshipUIMouse extends JPanel {
      * Creates mouse adapter
      */
     public BattleshipUIMouse() {
+        
+        // Set background of JPanel
+        setBackground(new Color(83, 128, 250));
+        
         // Add mouse listener to JPanel
         // Create new Mouse Adapter
         addMouseListener(new MouseAdapter() {
@@ -30,7 +34,7 @@ public class BattleshipUIMouse extends JPanel {
              */
             public void mouseEntered(MouseEvent e) {
                 defaultBackground = getBackground();
-                setBackground(Color.GRAY);
+                setBackground(Color.darkGray);
             }
 
             @Override
