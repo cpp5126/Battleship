@@ -38,6 +38,10 @@ public class BattleshipUIMouse extends JPanel {
             }
             
             @Override
+            /**
+             * Check if mouse has clicked within a block
+             *  If clicked, set color to red to show a fire has been shot at this block
+             */
             public void mouseClicked(MouseEvent e) {
                 setBackground(Color.RED);
             }
