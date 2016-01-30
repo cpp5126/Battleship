@@ -36,6 +36,11 @@ public class BattleshipUIMouse extends JPanel {
                 defaultBackground = getBackground();
                 setBackground(Color.darkGray);
             }
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setBackground(Color.RED);
+            }
 
             @Override
             /**
@@ -43,7 +48,9 @@ public class BattleshipUIMouse extends JPanel {
              * When the mouse exits, change the color to the original color
              */
             public void mouseExited(MouseEvent e) {
-                setBackground(defaultBackground);
+                if(getBackground() != Color.RED){
+                    setBackground(defaultBackground);
+                }
             }
         });
     }
