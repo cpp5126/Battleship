@@ -10,11 +10,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.JPanel;
 
 public class BattleshipUIMouse extends JPanel {    
     // Initialize variable for original color
     private Color defaultBackground;
+    
+    public String coords;
     
     /**
      * Creates mouse adapter
@@ -44,6 +47,12 @@ public class BattleshipUIMouse extends JPanel {
              */
             public void mouseClicked(MouseEvent e) {
                 setBackground(Color.RED);
+                try{
+                    Client.out.writeObject("Clicked: " + coords);
+                    Client.out.flush();
+                }catch(IOException ioException){
+                    ioException.printStackTrace();
+                }
             }
 
             @Override
@@ -65,5 +74,16 @@ public class BattleshipUIMouse extends JPanel {
      */
     public Dimension getPreferredSize() {
         return new Dimension(50, 50);
+    }
+    
+    /**
+     * Set coordinates of each grid block
+     * @param row
+     * @param col 
+     */
+    public void setCoords(int row, int col){
+        String rows = Integer.toString(row);
+        String cols = Integer.toString(col);
+        coords = "Row: " + rows + " -- Col: " + cols;
     }
 }

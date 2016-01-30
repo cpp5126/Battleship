@@ -14,6 +14,7 @@ public class Server {
     Socket connection = null;
     ObjectOutputStream out;
     ObjectInputStream in;
+    String message;
     
     Server(){}
     
@@ -42,7 +43,12 @@ public class Server {
             in = new ObjectInputStream(connection.getInputStream());
             
             while(true){
-                
+                try{
+                    message = (String)in.readObject();
+                    System.out.println("client>" + message);
+                }catch(ClassNotFoundException i){
+                    System.err.println("Data received in unknown format");
+                }
             }
             
         }catch(IOException e){

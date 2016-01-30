@@ -33,7 +33,8 @@ public class BattleshipUIPane extends JPanel {
                 // Create mouse adapter from BattleshipUIMouse class
                 // Done within loop to create a new one for each grid block
                 BattleshipUIMouse battleshipUIMouse = new BattleshipUIMouse();
-
+                battleshipUIMouse.setCoords(row + 1, col + 1);
+                
                 // Create border for squared grid
                 // Done within loop to create a new one for each grid block
                 Border border = null;
