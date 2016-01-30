@@ -37,9 +37,7 @@ public class Client {
             // Start game over network
             System.out.println("Connected to server on port 8901");
             JFrame frame = new BattleshipUI();
-            while(true){
-                
-            }
+            while(true){}
             
         }catch(IOException e){
             //e.printStackTrace();

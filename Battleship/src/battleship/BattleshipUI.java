@@ -8,6 +8,7 @@ package battleship;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import javax.swing.*;
 
 public class BattleshipUI extends JFrame{
@@ -15,7 +16,7 @@ public class BattleshipUI extends JFrame{
     // Initialize variables
     private JMenuBar menuBar;
     private JMenu menu1;
-    private JMenuItem menuItem1;
+    private JMenuItem menuItem1, menuItem2;
     
     /**
      * Creates the frame for the battleship board
@@ -53,7 +54,7 @@ public class BattleshipUI extends JFrame{
         // Add File option to menu bar
         menuBar.add(menu1);
         
-        // Create pause option for a menu
+        // Create restart option for a menu
         menuItem1 = new JMenuItem("Restart");
         
         // Add Action Listener to Restart option
@@ -71,11 +72,38 @@ public class BattleshipUI extends JFrame{
                 revalidate();
                 // Repaint the JFrame
                 repaint();
+                
+                try{
+                    Client.out.writeObject("Game Restarted");
+                    Client.out.flush();
+                }catch(IOException ioException){
+                    ioException.printStackTrace();
+                }
             }
         });
         
         // Add menu items to "File" menu
         menu1.add(menuItem1);
+        
+        // Create Quit option for menu bar
+        menuItem2 = new JMenuItem("Quit");
+        
+        // Add Action Listener to Restart option
+        menuItem2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Quit JFrame
+                dispose();
+                try{
+                    Client.out.writeObject("Client disconnected");
+                    Client.out.flush();
+                }catch(IOException ioException){
+                    ioException.printStackTrace();
+                }
+            }
+        });
+        
+        // Add menu items to "File" menu
+        menu1.add(menuItem2);
         
         // Add menu bar to Frame
         setJMenuBar(menuBar);
