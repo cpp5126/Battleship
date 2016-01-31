@@ -92,7 +92,7 @@ public class Client {
                  *  If clicked, set color to red to show a fire has been shot at this block
                  */
                 public void mouseClicked(MouseEvent e) {
-                    board[j].setBackground(Color.RED);
+                    //board[j].setBackground(Color.RED);
                     currentSquare = board[j];
                     out.println("MOVE " + j);
                 }
@@ -170,6 +170,9 @@ public class Client {
                 response = in.readLine();
                 // Loop through all valid messages coming through the socket and output the proper message to player.
                 if (response.startsWith("VALID_MOVE")) {
+                    int loc = Integer.parseInt(response.substring(11));
+                    board[loc].setBackground(Color.RED);
+                    board[loc].repaint();
                     // Player must wait for oponent to move
                     messageLabel.setText("Opponents turn, please wait");
                     currentSquare.repaint();
@@ -180,21 +183,11 @@ public class Client {
                     board[loc].setBackground(Color.RED);
                     board[loc].repaint();
                     messageLabel.setText("Opponent moved, your turn");
-                } else if (response.startsWith("VICTORY")) {
-                    // Player has won the game
-                    messageLabel.setText("You win");
-                    break;
-                } else if (response.startsWith("DEFEAT")) {
-                    // Opponent has won the game
-                    messageLabel.setText("You lose");
-                    break;
-                } else if (response.startsWith("TIE")) {
-                    // Game has ended in a tie
-                    messageLabel.setText("You tied");
-                    break;
                 } else if (response.startsWith("MESSAGE")) {
                     // If message begins with MESSAGE, display message for player and opponent
                     messageLabel.setText(response.substring(8));
+                } else{
+                    break;
                 }
             }
             // Quit

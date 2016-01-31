@@ -125,7 +125,7 @@ public class Game {
                     if (command.startsWith("MOVE")) {
                         int location = Integer.parseInt(command.substring(5));
                         if (playerMove(location, this)) {
-                            output.println("VALID_MOVE");
+                            output.println("VALID_MOVE " + location);
                         } else {
                             output.println("MESSAGE Not a valid move.");
                         }
