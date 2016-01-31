@@ -50,9 +50,8 @@ public class BattleshipUIMouse extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 setBackground(Color.RED);
                 try{
-                    Client.out.writeObject("Clicked: " + coords);
+                    //Client.out.writeObject("Clicked: " + coords);
                     Client.out.writeObject("Num " + num);
-                    System.out.println("Num " + num);
                     Client.out.flush();
                 }catch(IOException ioException){
                     ioException.printStackTrace();

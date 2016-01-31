@@ -70,8 +70,10 @@ import java.net.*;
                         if(message.contains("Num")){
                             String str = message.replaceAll("\\D+","");
                             int blockNum = Integer.parseInt(str);
-                            for(int i = 0; i < 100; i++){
-//                                if(new BattleshipUIMouse().num == blockNum){
+                            for(int i = 0; i < 10; i++){
+                                System.out.println(i);
+                                //System.out.println(BattleshipUIPane.getList(i));
+//                                if(BattleshipUIPane.getList(i).getNum() == blockNum){
 //                                    BattleshipUIMouse.setColor();
 //                                }
                             }

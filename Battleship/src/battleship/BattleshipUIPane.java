@@ -7,11 +7,15 @@
 package battleship;
 
 import java.awt.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 public class BattleshipUIPane extends JPanel {
 
+    BattleshipUIMouse battleshipUIMouse;
+    ArrayList<BattleshipUIMouse> bsList = new ArrayList<>();
+    
     public BattleshipUIPane() {
         // Set layout for JPanel
         setLayout(new GridBagLayout());
@@ -32,7 +36,8 @@ public class BattleshipUIPane extends JPanel {
 
                 // Create mouse adapter from BattleshipUIMouse class
                 // Done within loop to create a new one for each grid block
-                BattleshipUIMouse battleshipUIMouse = new BattleshipUIMouse();
+                battleshipUIMouse = new BattleshipUIMouse();
+                bsList.add(battleshipUIMouse);
                 
                 // Set coordinates and numbers for each block
                 battleshipUIMouse.setCoords(row + 1, col + 1);
@@ -63,6 +68,11 @@ public class BattleshipUIPane extends JPanel {
                 // Add mouse adapter and GridBag Constraint of each grid block to the JPanel
                 add(battleshipUIMouse, gbc);
             }
-        }
+        }        
+    }
+    
+    int getList(int i){
+        //System.out.println(bsList.size());
+        return bsList.get(i).getNum();
     }
 }
