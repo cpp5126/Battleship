@@ -48,6 +48,7 @@ public class Client {
     public Client() throws Exception {
 
         // Initialize networking
+        // Change localhost to get ipaddress of the hosted server -- type in "ipaddress" instead of local host
         socket = new Socket("localhost", PORT);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
