@@ -6,24 +6,26 @@
 
 package battleship;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.*;
 
 public class BattleshipUIMouse extends JPanel {    
     // Initialize variable for original color
     private Color defaultBackground;
     
+    // Coordinates of each block
     public String coords;
+    int num;
+    
+    // Boolean to set color for other player
+    static boolean hit = false;
     
     /**
      * Creates mouse adapter
      */
     public BattleshipUIMouse() {
-        
         // Set background of JPanel
         setBackground(new Color(83, 128, 250));
         
@@ -49,6 +51,8 @@ public class BattleshipUIMouse extends JPanel {
                 setBackground(Color.RED);
                 try{
                     Client.out.writeObject("Clicked: " + coords);
+                    Client.out.writeObject("Num " + num);
+                    System.out.println("Num " + num);
                     Client.out.flush();
                 }catch(IOException ioException){
                     ioException.printStackTrace();
@@ -66,6 +70,10 @@ public class BattleshipUIMouse extends JPanel {
                 }
             }
         });
+        // Check if block is hit, set to red if so
+        if(hit == true){
+            setBackground(Color.RED);
+        }
     }
 
     @Override
@@ -85,5 +93,28 @@ public class BattleshipUIMouse extends JPanel {
         String rows = Integer.toString(row);
         String cols = Integer.toString(col);
         coords = "Row: " + rows + " -- Col: " + cols;
+    }
+    
+    /**
+     * Similar to coordinates, set number for each block
+     * @param num 
+     */
+    public void setNum(int num){
+        this.num = num;
+    }
+    
+    /**
+     * Getter for block number
+     * @return 
+     */
+    public int getNum(){
+        return num;
+    }
+    
+    /**
+     * Setter for color of block
+     */
+    public static void setColor(){
+        hit = true;
     }
 }

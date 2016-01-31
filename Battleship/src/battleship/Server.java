@@ -10,38 +10,61 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-    ServerSocket providerSocket;
-    Socket connection = null;
+    // Create server socket
+    ServerSocket server;
+    // Create two players as sockets
+    Socket player1, player2;
+    // Create input and output streams
     ObjectOutputStream out;
     ObjectInputStream in;
+    // Create message
     String message;
     
     Server(){}
     
+    /**
+     * Start server
+     * @param args 
+     */
     public static void main(String args[])
     {
+        // Create server object
         Server server = new Server();
         while(true){
             server.run();
         }
     }
-        
+    
+    /**
+     * Run process of server
+     */
     void run(){
         try{
             // Create socket for client to connect to
-            providerSocket = new ServerSocket(8901);
+            server = new ServerSocket(8901);
             System.out.println("Battleship Server is Running");
             
             // Wait for connection
             System.out.println("Waiting for connnection...");
-            connection = providerSocket.accept();
-            System.out.println("Connection received from " + connection.getInetAddress().getHostName());
             
-            // Get input and output streams
-            out = new ObjectOutputStream(connection.getOutputStream());
-            out.flush();
-            in = new ObjectInputStream(connection.getInputStream());
+            // Accept player 1 connection
+            Player player1 = new Player(server.accept());
             
+            // Inform player 1 you are waiting fro another player
+            System.out.println("Waiting for opponent...");
+            
+            // Accept player 2 information
+            Player player2 = new Player(server.accept());
+                
+            // Set player opponents
+            player1.setOpponent(player2);
+            player2.setOpponent(player1);
+            
+            // Start players
+            player1.start();
+            player2.start();
+            
+            // Read in data sent over socket from clients
             while(true){
                 try{
                     message = (String)in.readObject();
@@ -52,16 +75,16 @@ public class Server {
             }
             
         }catch(IOException e){
-            e.printStackTrace();
+            // Do nothing
         }finally{
             // Close connection
             try{
                 in.close();
                 out.close();
-                providerSocket.close();
+                server.close();
             }
             catch(IOException e){
-                e.printStackTrace();
+                // Do nothing
             }
         }
     }

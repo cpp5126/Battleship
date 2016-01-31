@@ -36,6 +36,8 @@ public class BattleshipUI extends JFrame{
         pack();
         // Set location of Frame
         setLocationRelativeTo(null);
+        // Disable resizing
+        setResizable(false);
         // Set Frame visible
         setVisible(true);
     }
@@ -94,6 +96,7 @@ public class BattleshipUI extends JFrame{
                 // Quit JFrame
                 dispose();
                 try{
+                    // Let server know that client hasd disconntectd
                     Client.out.writeObject("Client disconnected");
                     Client.out.flush();
                 }catch(IOException ioException){

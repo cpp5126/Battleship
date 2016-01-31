@@ -11,22 +11,33 @@ import java.net.*;
 import javax.swing.JFrame;
 
 public class Client {
+    // Create client socket
     Socket requestSocket;
+    // Create static output stream for other classes to talk to client
     static ObjectOutputStream out;
+    // Create input stream
     ObjectInputStream in;
+    // Create message
     String message;
     
     Client(){}
     
+    /**
+     * Start client
+     * @param args 
+     */
     public static void main(String args[])
     {
         Client client = new Client();
         client.run();
     }
     
+    /**
+     * Run process of client through socket
+     */
     void run(){
         try{
-            // Request connection to server
+            // Connect to server through socket
             requestSocket = new Socket("localhost", 8901);
             
             // Get input and output streams
@@ -34,8 +45,10 @@ public class Client {
             out.flush();
             in = new ObjectInputStream(requestSocket.getInputStream());
             
-            // Start game over network
+            // Establish connection for player
             System.out.println("Connected to server on port 8901");
+            out.writeObject("Player connected");
+            // Create frame for player
             JFrame frame = new BattleshipUI();
             while(true){}
             

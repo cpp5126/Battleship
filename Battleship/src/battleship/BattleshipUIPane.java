@@ -6,18 +6,18 @@
 
 package battleship;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 public class BattleshipUIPane extends JPanel {
 
     public BattleshipUIPane() {
         // Set layout for JPanel
         setLayout(new GridBagLayout());
+        
+        // Int counter
+        int num = 0;
         
         // Create GridBag Constraints
         GridBagConstraints gbc = new GridBagConstraints();
@@ -33,7 +33,11 @@ public class BattleshipUIPane extends JPanel {
                 // Create mouse adapter from BattleshipUIMouse class
                 // Done within loop to create a new one for each grid block
                 BattleshipUIMouse battleshipUIMouse = new BattleshipUIMouse();
+                
+                // Set coordinates and numbers for each block
                 battleshipUIMouse.setCoords(row + 1, col + 1);
+                battleshipUIMouse.setNum(num);
+                num++;
                 
                 // Create border for squared grid
                 // Done within loop to create a new one for each grid block
