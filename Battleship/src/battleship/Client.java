@@ -20,13 +20,16 @@ public class Client {
     private JFrame frame = new JFrame("Battleship");
     // Label to display messages sent between client and server
     private JLabel messageLabel = new JLabel("");
+    
+    JPanel container = new JPanel();
+    
     // Frame attributes
     private JMenuBar menuBar;
     private JMenu menu1;
     private JMenuItem menuItem1, menuItem2;
     
     // Create array of Jpanels to create board
-    private Square[] board = new Square[100];
+    private Square[] board = new Square[200];
     private Square currentSquare;
     
     // Server socket information
@@ -48,22 +51,24 @@ public class Client {
         socket = new Socket("localhost", PORT);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
-
+        
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, "South");
         
         // Create JPanel for board to be held on
-        JPanel boardPanel = new JPanel();
+        JPanel boardPanel1 = new JPanel();
         
         // Set the laytout to be
         // 10x10 squares
         // 1x1 borders
-        boardPanel.setLayout(new GridLayout(10, 10, 1, 1));
+        boardPanel1.setLayout(new GridLayout(10, 10, 1, 1));
         
         // Loop through squares building the board
         //  and give each a MouseAdapter and add to boardPanel
-        for (int i = 0; i < board.length; i++) {
+        for (int i = 0; i < 100; i++) {
             final int j = i;
             board[i] = new Square();
             board[i].addMouseListener(new MouseAdapter() {
@@ -97,9 +102,61 @@ public class Client {
                     out.println("MOVE " + j);
                 }
             });
-            boardPanel.add(board[i]);
+            boardPanel1.add(board[i]);
         }
-        frame.getContentPane().add(boardPanel, "Center");
+        
+        // Create second frame for second 10x10 gid        
+        // Create JPanel for board to be held on
+        JPanel boardPanel2 = new JPanel();
+        
+        // Set the laytout to be
+        // 10x10 squares
+        // 1x1 borders
+        boardPanel2.setLayout(new GridLayout(10, 10, 1, 1));
+        
+        // Loop through squares building the board
+        //  and give each a MouseAdapter and add to boardPanel
+        for (int i = 100; i < 200; i++) {
+            final int j = i;
+            board[i] = new Square();
+            board[i].addMouseListener(new MouseAdapter() {
+                 @Override
+                /**
+                 * Check when the mouse has entered into a specific grid block
+                 * Change the color of the grid block when the mouse is within its boundaries
+                 */
+                public void mouseEntered(MouseEvent e) {
+                    defaultBackground = board[j].getBackground();
+                    board[j].setBackground(Color.darkGray);
+                }
+                @Override
+                /**
+                 * Check when the mouse has exited the grid block
+                 * When the mouse exits, change the color to the original color
+                 */
+                public void mouseExited(MouseEvent e) {
+                    if(board[j].getBackground() != Color.RED){
+                        board[j].setBackground(defaultBackground);
+                    }
+                }
+                @Override
+                /**
+                 * Check if mouse has clicked within a block
+                 *  If clicked, set color to red to show a fire has been shot at this block
+                 */
+                public void mouseClicked(MouseEvent e) {
+                    //board[j].setBackground(Color.RED);
+                    currentSquare = board[j];
+                    out.println("MOVE " + j);
+                }
+            });
+            boardPanel2.add(board[i]);
+        }
+        
+        // Add panels to container panel to be added to main frame
+        container.add(boardPanel1);
+        container.add(boardPanel2);
+        frame.getContentPane().add(container, "Center");
     }
 
     /**
@@ -180,7 +237,7 @@ public class Client {
                     // Opponent has moved, players turn again
                     int loc = Integer.parseInt(response.substring(15));
                     // If opponent moved, set that block to red on players board
-                    board[loc].setBackground(Color.RED);
+                    board[loc + 100].setBackground(Color.BLUE);
                     board[loc].repaint();
                     messageLabel.setText("Opponent moved, your turn");
                 } else if (response.startsWith("MESSAGE")) {
@@ -230,7 +287,7 @@ public class Client {
             // Set close operation
             client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             // Set size
-            client.frame.setSize(500, 500);
+            client.frame.setSize(1000, 500);
             // Add menu bar
             client.setJMenuBar();
             // Set location to center of screen

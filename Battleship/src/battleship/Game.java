@@ -13,7 +13,7 @@ import java.net.*;
 
 public class Game {
     // Create array of 100 to create board
-    private Player[] board = new Player[100];
+    private Player[] board = new Player[200];
     // Create player object to hold current player
     Player currentPlayer;
     
@@ -47,7 +47,7 @@ public class Game {
      */
     public synchronized boolean playerMove(int location, Player player) {
         // Check if the move was valid
-        if (player == currentPlayer && board[location] == null) {
+        if (player == currentPlayer && board[location] == null && location < 100) {
             // Set location of the board to what the player pressed
             board[location] = currentPlayer;
             // Set player to opponent turn
