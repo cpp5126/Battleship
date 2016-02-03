@@ -20,8 +20,10 @@ public class Client {
     private JFrame frame = new JFrame("Battleship");
     // Label to display messages sent between client and server
     private JLabel messageLabel = new JLabel("");
+    private JLabel enemyLabel, playerLabel;
     
     JPanel container = new JPanel();
+    JPanel northContainer = new JPanel();
     
     // Frame attributes
     private JMenuBar menuBar;
@@ -53,7 +55,23 @@ public class Client {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         
+        // Set panels for headers and board
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        northContainer.setLayout(new GridLayout(1, 2));
+        
+        // Set Label for player and enemy
+        playerLabel = new JLabel("Player's Battleships");
+        playerLabel.setBackground(Color.lightGray);
+        // Align text to right side for right side board
+        playerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        enemyLabel = new JLabel("Shots at Enemy");
+        enemyLabel.setBackground(Color.lightGray);
+        // Add both labels to label panel
+        northContainer.add(enemyLabel);
+        northContainer.add(playerLabel);
+        // Add panel to north of GUI
+        frame.getContentPane().add(northContainer, "North");
+        
         
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
@@ -72,6 +90,7 @@ public class Client {
         for (int i = 0; i < 100; i++) {
             final int j = i;
             board[i] = new Square();
+            board[i].setBackground(Color.darkGray);
             board[i].addMouseListener(new MouseAdapter() {
                  @Override
                 /**
@@ -80,7 +99,7 @@ public class Client {
                  */
                 public void mouseEntered(MouseEvent e) {
                     defaultBackground = board[j].getBackground();
-                    board[j].setBackground(Color.darkGray);
+                    board[j].setBackground(Color.GRAY);
                 }
                 @Override
                 /**
@@ -120,6 +139,7 @@ public class Client {
         for (int i = 100; i < 200; i++) {
             final int j = i;
             board[i] = new Square();
+            board[i].setBackground(Color.GRAY);
             board[i].addMouseListener(new MouseAdapter() {
                  @Override
                 /**
