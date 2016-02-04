@@ -55,6 +55,7 @@ public class Client {
 
         // Initialize networking
         // Change localhost to get ipaddress of the hosted server -- type in "ipaddress" instead of local host
+        // To play someone over server, server file is running on: 40.117.229.121
         socket = new Socket("localhost", PORT);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
