@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import javax.swing.*;
 
 public class Client {
@@ -22,8 +23,8 @@ public class Client {
     private JLabel messageLabel = new JLabel("");
     private JLabel enemyLabel, playerLabel;
     
-    JPanel container = new JPanel();
-    JPanel northContainer = new JPanel();
+    private JPanel container = new JPanel();
+    private JPanel northContainer = new JPanel();
     
     // Frame attributes
     private JMenuBar menuBar;
@@ -35,13 +36,16 @@ public class Client {
     private Square currentSquare;
     
     // Server socket information
-    private static int PORT = 8901;
+    private final int PORT = 8901;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     
     // Set color for mouse movement
     private Color defaultBackground;
+    
+    // Create list of marked blocks
+    int[] list;
 
     /**
      * Creates client object. Builds GUI and sets mouse listeners.
@@ -71,7 +75,6 @@ public class Client {
         northContainer.add(playerLabel);
         // Add panel to north of GUI
         frame.getContentPane().add(northContainer, "North");
-        
         
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
@@ -107,7 +110,7 @@ public class Client {
                  * When the mouse exits, change the color to the original color
                  */
                 public void mouseExited(MouseEvent e) {
-                    if(board[j].getBackground() != Color.RED){
+                    if(board[j].getBackground() != Color.RED && board[j].getBackground() != Color.lightGray){
                         board[j].setBackground(defaultBackground);
                     }
                 }
@@ -123,8 +126,8 @@ public class Client {
                 }
             });
             boardPanel1.add(board[i]);
-        }
-        
+        }                
+                
         // Create second frame for second 10x10 gid        
         // Create JPanel for board to be held on
         JPanel boardPanel2 = new JPanel();
@@ -156,23 +159,38 @@ public class Client {
                  * When the mouse exits, change the color to the original color
                  */
                 public void mouseExited(MouseEvent e) {
-                    if(board[j].getBackground() != Color.RED){
+                    if(board[j].getBackground() != Color.RED && board[j].getBackground() != Color.lightGray && board[j].getBackground() != Color.BLUE){
                         board[j].setBackground(defaultBackground);
                     }
-                }
-                @Override
-                /**
-                 * Check if mouse has clicked within a block
-                 *  If clicked, set color to red to show a fire has been shot at this block
-                 */
-                public void mouseClicked(MouseEvent e) {
-                    //board[j].setBackground(Color.RED);
-                    currentSquare = board[j];
-                    out.println("MOVE " + j);
                 }
             });
             boardPanel2.add(board[i]);
         }
+        
+        /**
+        * #=========== THIS IS A TEST AREA FOR FUNCTIONALITY ===========#
+        */
+        // Create random generator
+        Random generator = new Random();
+        // Initialize list
+        list = new int[8];
+        // Set min and max
+        int MIN = 101;
+        int MAX = 199;
+        // Loop through and create 8 different "marked" blocks
+        for(int i = 0; i < 8; i++){
+            int random = generator.nextInt(MAX - MIN) + MIN;
+            if(Arrays.asList(list).contains(random)){
+                random = generator.nextInt(MAX - MIN) + MIN;
+            }else{
+                list[i] = random;
+                board[random].setBackground(Color.BLUE);
+                board[random].setMarked();
+            }
+        } 
+        /**
+        * #=========== THIS IS A TEST AREA FOR FUNCTIONALITY ===========#
+        */
         
         // Add panels to container panel to be added to main frame
         container.add(boardPanel1);
@@ -240,6 +258,7 @@ public class Client {
             response = in.readLine();
             // Check if input is a welcome message
             if (response.startsWith("WELCOME")) {
+                out.println("LIST " + Arrays.toString(list));
                 char mark = response.charAt(8);
                 frame.setTitle("Battleship - Player " + mark);
             }
@@ -249,22 +268,33 @@ public class Client {
                 // Loop through all valid messages coming through the socket and output the proper message to player.
                 if (response.startsWith("VALID_MOVE")) {
                     int loc = Integer.parseInt(response.substring(11));
+                    board[loc].setBackground(Color.lightGray);
+                    board[loc].repaint();
+                    // Player must wait for oponent to move
+                    messageLabel.setText("Opponents turn, please wait...");
+                    currentSquare.repaint();
+                } else if(response.startsWith("HIT_MOVE")){
+                    int loc = Integer.parseInt(response.substring(9));
                     board[loc].setBackground(Color.RED);
                     board[loc].repaint();
                     // Player must wait for oponent to move
-                    messageLabel.setText("Opponents turn, please wait");
+                    messageLabel.setText("Ship hit!! -- Opponents turn, please wait...");
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
                     // Opponent has moved, players turn again
                     int loc = Integer.parseInt(response.substring(15));
                     // If opponent moved, set that block to red on players board
-                    board[loc + 100].setBackground(Color.BLUE);
+                    if(board[loc + 100].getMarked() == true){
+                        board[loc + 100].setBackground(Color.RED);
+                    }else{
+                        board[loc + 100].setBackground(Color.lightGray);
+                    }
                     board[loc].repaint();
-                    messageLabel.setText("Opponent moved, your turn");
+                    messageLabel.setText("Your turn");
                 } else if (response.startsWith("MESSAGE")) {
                     // If message begins with MESSAGE, display message for player and opponent
                     messageLabel.setText(response.substring(8));
-                } else{
+                } else {
                     break;
                 }
             }
@@ -293,8 +323,29 @@ public class Client {
      * Square object to create board. Array of square objects will be used to create the 10x10 board.
      */
     static class Square extends JPanel {
+        
+        boolean marked = false;
+        
+        /**
+         * Create gray squares
+         */
         public Square() {
             setBackground(Color.GRAY);
+        }
+        
+        /**
+         * Setter to set marked blocks.
+         */
+        public void setMarked(){
+            marked = true;
+        }
+        
+        /**
+         * Getter to get marked blocks.
+         * @return 
+         */
+        public boolean getMarked(){
+            return marked;
         }
     }
     

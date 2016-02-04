@@ -10,19 +10,18 @@ package battleship;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Game {
-    // Create array of 100 to create board
-    private Player[] board = new Player[200];
     // Create player object to hold current player
-    Player currentPlayer;
+    Player currentPlayer = new Player();
     
     /**
      * Game object method. Creates all elements of board array to start as null.
      */
     public Game(){
-        for(int i = 0; i < board.length; i++){
-            board[i] = null;
+        for(int i = 0; i < currentPlayer.board.length; i++){
+            currentPlayer.board[i] = null;
         }
     }
 
@@ -31,8 +30,8 @@ public class Game {
      * @return 
      */
     public boolean boardFilledUp() {
-        for (int i = 0; i < board.length; i++) {
-            if (board[i] == null) {
+        for (int i = 0; i < currentPlayer.board.length; i++) {
+            if (currentPlayer.board[i] == null) {
                 return false;
             }
         }
@@ -47,9 +46,11 @@ public class Game {
      */
     public synchronized boolean playerMove(int location, Player player) {
         // Check if the move was valid
-        if (player == currentPlayer && board[location] == null && location < 100) {
+        if (player == currentPlayer && currentPlayer.board[location] == null && location < 100) {
             // Set location of the board to what the player pressed
-            board[location] = currentPlayer;
+            currentPlayer.board[location] = currentPlayer;
+            // Add location to list
+            currentPlayer.hitList.add(location + 100);
             // Set player to opponent turn
             currentPlayer = currentPlayer.opponent;
             currentPlayer.enemyMove(location);
@@ -57,12 +58,47 @@ public class Game {
         }
         return false;
     }
+    
+    /**
+     * Check if player hit a block that had been marked.
+     * @param location
+     * @return 
+     */
+    public synchronized boolean getMarked(int location){
+        int shotLoc = location + 100;
+        for(int i = 0; i < currentPlayer.markedList.size(); i++){
+            if(shotLoc == currentPlayer.markedList.get(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if a player has won. This will check if a players hit list has hit all the
+     * marked blocks of opponents.
+     */
+    public void checkWin(){
+        // Create opponent player object 
+        Player player = currentPlayer.opponent;
+        // Loop through player list
+        for(int i : currentPlayer.markedList){
+            if(player.hitList.contains(i)){
+                player.gameWinner = true;
+            }else{
+                player.gameWinner = false;
+                break;
+            }
+        }
+    }
 
     /**
      * Player class
      * This class is within Game class to reference game player
      */
     class Player extends Thread {
+        // Create array of 100 to create board
+        private Player[] board = new Player[200];
         // Set mark for player objects
         char mark;
         // Create object to establish player oponent
@@ -71,7 +107,21 @@ public class Game {
         Socket socket;
         BufferedReader input;
         PrintWriter output;
+        
+        // Create list of all hits
+        private ArrayList<Integer> hitList = new ArrayList<>();
+        // Create list of marked blocks
+        private ArrayList<Integer> markedList = new ArrayList<>();
+        // Boolean to check if player has won
+        boolean gameWinner = false;
 
+        /**
+         * Player class for empty player initialization.
+         */
+        public Player(){
+            // Leave empty
+        }
+        
         /**
          * Create player object. Check for other player.
          * @param socket
@@ -87,6 +137,21 @@ public class Game {
                 output = new PrintWriter(socket.getOutputStream(), true);
                 output.println("WELCOME " + mark);
                 output.println("MESSAGE Waiting for opponent to connect...");
+                
+                // Get list of marked blocks for each player
+                String command = input.readLine();
+                if (command.contains("LIST")){
+                    //System.out.println(command);
+                    String list = command.substring(5);
+                    int first = 1;
+                    int second = 4;
+                    for(int i = 0; i < 8; i++){
+                        //System.out.println(list.substring(first, second));
+                        markedList.add(Integer.parseInt(list.substring(first, second)));
+                        first += 5;
+                        second += 5;
+                    }
+                }
             } catch (IOException e) {
                 System.out.println(e);
             }
@@ -123,9 +188,22 @@ public class Game {
                 while (true) {
                     String command = input.readLine();
                     if (command.startsWith("MOVE")) {
+                        // Get player location
                         int location = Integer.parseInt(command.substring(5));
+                        // Check if valid move
                         if (playerMove(location, this)) {
-                            output.println("VALID_MOVE " + location);
+                            // Check if block is "marked"
+                            if(getMarked(location)){
+                                output.println("HIT_MOVE " + location);
+                                // Check if player won
+                                checkWin();
+                                if(gameWinner == true){
+                                    opponent.output.println("WIN");
+                                    output.println("WIN");
+                                }
+                            }else{
+                                output.println("VALID_MOVE " + location);
+                            }
                         } else {
                             output.println("MESSAGE Not a valid move.");
                         }
