@@ -46,6 +46,8 @@ public class Client {
     
     // Create list of marked blocks
     int[] list;
+    
+    private String winner = "";
 
     /**
      * Creates client object. Builds GUI and sets mouse listeners.
@@ -351,7 +353,10 @@ public class Client {
                 } else if (response.startsWith("MESSAGE")) {
                     // If message begins with MESSAGE, display message for player and opponent
                     messageLabel.setText(response.substring(8));
-                } else {
+                } else if(response.startsWith("WIN")){
+                    winner = response.substring(4);
+                    break;
+                }else {
                     break;
                 }
             }
@@ -371,7 +376,7 @@ public class Client {
      */
     private boolean playAgain() {
         // Show dialog box asking for remath Yes/No
-        int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", "Battleship Rematch", JOptionPane.YES_NO_OPTION);
+        int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", winner, JOptionPane.YES_NO_OPTION);
         frame.dispose();
         return response == JOptionPane.YES_OPTION;
     }

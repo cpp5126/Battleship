@@ -198,8 +198,8 @@ public class Game {
                                 // Check if player won
                                 checkWin();
                                 if(gameWinner == true){
-                                    opponent.output.println("WIN");
-                                    output.println("WIN");
+                                    opponent.output.println("WIN Player " + currentPlayer.opponent.mark + " won the game!");
+                                    output.println("WIN Player " + currentPlayer.opponent.mark + " won the game!");
                                 }
                             }else{
                                 output.println("VALID_MOVE " + location);
