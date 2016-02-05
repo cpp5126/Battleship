@@ -145,7 +145,7 @@ public class Game {
                     String list = command.substring(5);
                     int first = 1;
                     int second = 4;
-                    for(int i = 0; i < 8; i++){
+                    for(int i = 0; i < 9; i++){
                         //System.out.println(list.substring(first, second));
                         markedList.add(Integer.parseInt(list.substring(first, second)));
                         first += 5;

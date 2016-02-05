@@ -174,21 +174,77 @@ public class Client {
         // Create random generator
         Random generator = new Random();
         // Initialize list
-        list = new int[8];
+        list = new int[9];
         // Set min and max
         int MIN = 101;
         int MAX = 199;
-        // Loop through and create 8 different "marked" blocks
-        for(int i = 0; i < 8; i++){
-            int random = generator.nextInt(MAX - MIN) + MIN;
-            if(Arrays.asList(list).contains(random)){
-                random = generator.nextInt(MAX - MIN) + MIN;
+        
+        int i = 0;
+        // Add first ship - 4 blocks
+        int random = generator.nextInt(MAX - MIN) + MIN;
+        if(Arrays.asList(list).contains(random)){
+            random = generator.nextInt(MAX - MIN) + MIN;
+        }else{
+            if(random % 10 > 5){
+                for(int j = 0; j < 4; j++){
+                    list[i] = random - j;
+                    board[random - j].setBackground(Color.BLUE);
+                    board[random - j].setMarked(); 
+                    i++;
+                }
             }else{
-                list[i] = random;
-                board[random].setBackground(Color.BLUE);
-                board[random].setMarked();
+                for(int j = 0; j < 4; j++){
+                    list[i] = random + j;
+                    board[random + j].setBackground(Color.BLUE);
+                    board[random + j].setMarked();
+                    i++;
+                }   
             }
-        } 
+        }
+        
+        // Add second ship - 3 blocks
+        random = generator.nextInt(MAX - MIN) + MIN;
+        if(Arrays.asList(list).contains(random)){
+            random = generator.nextInt(MAX - MIN) + MIN;
+        }else{
+            if(random % 10 > 5){
+                for(int j = 0; j < 3; j++){
+                    list[i] = random - j;
+                    board[random - j].setBackground(Color.BLUE);
+                    board[random - j].setMarked();
+                    i++;
+                }
+            }else{
+                for(int j = 0; j < 3; j++){
+                    list[i] = random + j;
+                    board[random + j].setBackground(Color.BLUE);
+                    board[random + j].setMarked();
+                    i++;
+                }   
+            }
+        }
+        
+        // Add second ship - 2 blocks
+        random = generator.nextInt(MAX - MIN) + MIN;
+        if(Arrays.asList(list).contains(random)){
+            random = generator.nextInt(MAX - MIN) + MIN;
+        }else{
+            if(random % 10 > 5){
+                for(int j = 0; j < 2; j++){
+                    list[i] = random - j;
+                    board[random - j].setBackground(Color.BLUE);
+                    board[random - j].setMarked();
+                    i++;
+                }
+            }else{
+                for(int j = 0; j < 2; j++){
+                    list[i] = random + j;
+                    board[random + j].setBackground(Color.BLUE);
+                    board[random + j].setMarked();
+                    i++;
+                }   
+            }
+        }
         /**
         * #=========== THIS IS A TEST AREA FOR FUNCTIONALITY ===========#
         */
