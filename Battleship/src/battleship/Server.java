@@ -2,9 +2,7 @@
  * Server.java -        Server for client to connect to
  * @author		Kam Talebzadeh
  * @date		January 31, 2016
- *
- *      ** Code modified from http://cs.lmu.edu/~ray/notes/javanetexamples/ **
- */
+*/
 
 package battleship;
 

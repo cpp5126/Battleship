@@ -49,11 +49,14 @@ public class Game {
         if (player == currentPlayer && currentPlayer.board[location] == null && location < 100) {
             // Set location of the board to what the player pressed
             currentPlayer.board[location] = currentPlayer;
+            
             // Add location to list
             currentPlayer.hitList.add(location + 100);
+            
             // Set player to opponent turn
             currentPlayer = currentPlayer.opponent;
             currentPlayer.enemyMove(location);
+            
             return true;
         }
         return false;
@@ -65,7 +68,9 @@ public class Game {
      * @return 
      */
     public synchronized boolean getMarked(int location){
+        // Set location to right side board
         int shotLoc = location + 100;
+        
         for(int i = 0; i < currentPlayer.markedList.size(); i++){
             if(shotLoc == currentPlayer.markedList.get(i)){
                 return true;
@@ -81,6 +86,7 @@ public class Game {
     public void checkWin(){
         // Create opponent player object 
         Player player = currentPlayer.opponent;
+        
         // Loop through player list
         for(int i : currentPlayer.markedList){
             if(player.hitList.contains(i)){
@@ -99,10 +105,13 @@ public class Game {
     class Player extends Thread {
         // Create array of 100 to create board
         private Player[] board = new Player[200];
+        
         // Set mark for player objects
         char mark;
+        
         // Create object to establish player oponent
         Player opponent;
+        
         // Create socket and streams for networking
         Socket socket;
         BufferedReader input;
@@ -110,8 +119,10 @@ public class Game {
         
         // Create list of all hits
         private ArrayList<Integer> hitList = new ArrayList<>();
+        
         // Create list of marked blocks
         private ArrayList<Integer> markedList = new ArrayList<>();
+        
         // Boolean to check if player has won
         boolean gameWinner = false;
 
@@ -208,9 +219,17 @@ public class Game {
                             output.println("MESSAGE Not a valid move.");
                         }
                     }else if (command.startsWith("CHAT")) {
-                        output.println(command);
-                        opponent.output.println(command);
-                    }else if (command.startsWith("QUIT")) {
+                        if(command.contains("/hackShip")){
+                            String chat = command.substring(5);
+                            opponent.output.println("HACK " + chat);
+                        }else{
+                            output.println(command);
+                            opponent.output.println(command);
+                        }
+                    } else if (command.startsWith("HACK")) {
+                        String chat = command.substring(5);
+                        opponent.output.println("MOD " + chat);
+                    } else if (command.startsWith("QUIT")) {
                         return;
                     }
                 }

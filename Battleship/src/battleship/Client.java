@@ -19,6 +19,7 @@ public class Client {
     
     // Create JFrame for player client
     private JFrame frame = new JFrame("Battleship");
+    
     // Label to display messages sent between client and server
     private JLabel messageLabel = new JLabel("");
     private JLabel enemyLabel, playerLabel;
@@ -82,27 +83,33 @@ public class Client {
         // Set Label for player and enemy
         playerLabel = new JLabel("Player's Battleships");
         playerLabel.setBackground(Color.lightGray);
+        
         // Align text to right side for right side board
         playerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         enemyLabel = new JLabel("Shots at Enemy");
         enemyLabel.setBackground(Color.lightGray);
+        
         // Add both labels to label panel
         northContainer.add(enemyLabel);
         northContainer.add(playerLabel);
+        
         // Add panel to north of GUI
         frame.getContentPane().add(northContainer, "North");
         
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
+        
         // Set messageArea to a scroll pane
         messageArea.setLineWrap(true);
         messageArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(messageArea);
         areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         areaScrollPane.setPreferredSize(new Dimension(1000, 50));
+        
         // Add messageLabel and textField to a panel so the textArea does not resize everything
         chatPanel.add(messageLabel);
         chatPanel.add(textField);
+        
         // Add chat panel and textarea to the south of the frame
         southContainer.add(chatPanel);
         southContainer.add(areaScrollPane);
@@ -129,7 +136,7 @@ public class Client {
         boardPanel1.setLayout(new GridLayout(10, 10, 1, 1));
         
         // Loop through squares building the board
-        //  and give each a MouseAdapter and add to boardPanel
+        // and give each a MouseAdapter and add to boardPanel
         for (int i = 0; i < 100; i++) {
             final int j = i;
             board[i] = new Square();
@@ -210,15 +217,20 @@ public class Client {
         /**
         * #=========== THIS IS A TEST AREA FOR FUNCTIONALITY ===========#
         */
+        
         // Create random generator
         Random generator = new Random();
+        
         // Initialize list
         list = new int[9];
+        
         // Set min and max
         int MIN = 101;
         int MAX = 199;
         
+        // Set counter
         int i = 0;
+        
         // Add first ship - 4 blocks
         int random = generator.nextInt(MAX - MIN) + MIN;
         if(Arrays.asList(list).contains(random)){
@@ -352,6 +364,7 @@ public class Client {
         try {
             // Get incoming input
             response = in.readLine();
+            
             // Check if input is a welcome message
             if (response.startsWith("WELCOME")) {
                 out.println("LIST " + Arrays.toString(list));
@@ -395,6 +408,10 @@ public class Client {
                     break;
                 } else if (response.startsWith("CHAT")) {
                     messageArea.append(response.substring(5) + "\n");
+                } else if (response.startsWith("HACK")) {
+                    out.println("HACK " + Arrays.toString(list));
+                } else if (response.startsWith("MOD")) {
+                    messageArea.append(response.substring(4) + "\n");
                 } else {
                     break;
                 }
