@@ -28,8 +28,7 @@ public class Client {
     // Build panels for GUI
     private JPanel container = new JPanel();
     private JPanel northContainer = new JPanel();
-    private JPanel southContainer = new JPanel();
-    private JPanel chatPanel = new JPanel();
+    private JPanel leftContainer = new JPanel();
     
     // Frame attributes
     private JMenuBar menuBar;
@@ -99,10 +98,9 @@ public class Client {
         });
         
         // Set panels for headers and board
-        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        container.setLayout(new GridLayout(2, 1));
         northContainer.setLayout(new GridLayout(1, 2));
-        southContainer.setLayout(new GridLayout(2, 1));
-        chatPanel.setLayout(new GridLayout(2,1));
+        leftContainer.setLayout(new BorderLayout());
         
         // Set Label for player and enemy
         playerLabel = new JLabel("Player's Battleships");
@@ -118,7 +116,8 @@ public class Client {
         northContainer.add(playerLabel);
         
         // Add panel to north of GUI
-        frame.getContentPane().add(northContainer, "North");
+        //frame.getContentPane().add(northContainer, "North");
+        frame.setLayout(new BorderLayout());
         
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
@@ -133,16 +132,11 @@ public class Client {
 
         JScrollPane areaScrollPane = new JScrollPane(messageArea);
         areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        areaScrollPane.setPreferredSize(new Dimension(1000, 50));
-        
-        // Add messageLabel and textField to a panel so the textArea does not resize everything
-        chatPanel.add(messageLabel);
-        chatPanel.add(textField);
         
         // Add chat panel and textarea to the south of the frame
-        southContainer.add(chatPanel);
-        southContainer.add(areaScrollPane);
-        frame.getContentPane().add(southContainer, "South");
+        leftContainer.add(textField, "North");
+        leftContainer.add(areaScrollPane, "Center");
+        leftContainer.add(messageLabel, "South");
         
         // Add Listener to textField
         textField.addActionListener(new ActionListener(){
@@ -331,8 +325,11 @@ public class Client {
         
         // Add panels to container panel to be added to main frame
         container.add(boardPanel1);
-        container.add(boardPanel2);
+        container.add(boardPanel2);       
+        
+        leftContainer.setPreferredSize(new Dimension(200, 400));
         frame.getContentPane().add(container, "Center");
+        frame.getContentPane().add(leftContainer, "West");
     }
 
     /**
@@ -354,6 +351,7 @@ public class Client {
         
         // Add Action Listener to Restart option
         menuItem1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 // Remove all from JFrame to rebuild it all
                 frame.getContentPane().removeAll();
@@ -371,6 +369,7 @@ public class Client {
         
         // Add Action Listener to Restart option
         menuItem2.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 // Quit JFrame
                 System.exit(0);
@@ -464,7 +463,7 @@ public class Client {
      * @return 
      */
     private boolean playAgain() {
-        if(winner != ""){
+        if(!winner.equals("")){
             // Show dialog box asking for remath Yes/No
             int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", winner, JOptionPane.YES_NO_OPTION);
             frame.dispose();
@@ -518,6 +517,8 @@ public class Client {
     
     /**
     * Starts client. Runs the client as an application to communicate with the server.
+     * @param args
+     * @throws java.lang.Exception
     */
     public static void main(String[] args) throws Exception {
         while (true) {
@@ -528,7 +529,7 @@ public class Client {
             client.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
             // Set size
-            client.frame.setSize(1000, 600);
+            client.frame.setSize(650, 800);
             
             // Add menu bar
             client.setJMenuBar();
