@@ -207,7 +207,10 @@ public class Game {
                         } else {
                             output.println("MESSAGE Not a valid move.");
                         }
-                    } else if (command.startsWith("QUIT")) {
+                    }else if (command.startsWith("CHAT")) {
+                        output.println(command);
+                        opponent.output.println(command);
+                    }else if (command.startsWith("QUIT")) {
                         return;
                     }
                 }

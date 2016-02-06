@@ -23,8 +23,11 @@ public class Client {
     private JLabel messageLabel = new JLabel("");
     private JLabel enemyLabel, playerLabel;
     
+    // Build panels for GUI
     private JPanel container = new JPanel();
     private JPanel northContainer = new JPanel();
+    private JPanel southContainer = new JPanel();
+    private JPanel chatPanel = new JPanel();
     
     // Frame attributes
     private JMenuBar menuBar;
@@ -47,7 +50,15 @@ public class Client {
     // Create list of marked blocks
     int[] list;
     
+    // Establish which player is winner to display on restart dialog box
     private String winner = "";
+    
+    // Chat boxes
+    JTextField textField = new JTextField();
+    JTextArea messageArea = new JTextArea();
+    
+    // Set player number
+    char mark;
 
     /**
      * Creates client object. Builds GUI and sets mouse listeners.
@@ -65,6 +76,8 @@ public class Client {
         // Set panels for headers and board
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
         northContainer.setLayout(new GridLayout(1, 2));
+        southContainer.setLayout(new GridLayout(2, 1));
+        chatPanel.setLayout(new GridLayout(2,1));
         
         // Set Label for player and enemy
         playerLabel = new JLabel("Player's Battleships");
@@ -81,7 +94,31 @@ public class Client {
         
         // Set label for server to client messages
         messageLabel.setBackground(Color.lightGray);
-        frame.getContentPane().add(messageLabel, "South");
+        // Set messageArea to a scroll pane
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        JScrollPane areaScrollPane = new JScrollPane(messageArea);
+        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        areaScrollPane.setPreferredSize(new Dimension(1000, 50));
+        // Add messageLabel and textField to a panel so the textArea does not resize everything
+        chatPanel.add(messageLabel);
+        chatPanel.add(textField);
+        // Add chat panel and textarea to the south of the frame
+        southContainer.add(chatPanel);
+        southContainer.add(areaScrollPane);
+        frame.getContentPane().add(southContainer, "South");
+        
+        // Add Listener to textField
+        textField.addActionListener(new ActionListener(){
+            /**
+             * Send content of textField to server when enter is pressed.
+             */
+            public void actionPerformed(ActionEvent e) {
+                out.println("CHAT " + "Player " + mark + ": " + textField.getText());
+                textField.setText("");
+            }
+        });
+        
         
         // Create JPanel for board to be held on
         JPanel boardPanel1 = new JPanel();
@@ -318,7 +355,7 @@ public class Client {
             // Check if input is a welcome message
             if (response.startsWith("WELCOME")) {
                 out.println("LIST " + Arrays.toString(list));
-                char mark = response.charAt(8);
+                mark = response.charAt(8);
                 frame.setTitle("Battleship - Player " + mark);
             }
             
@@ -356,7 +393,9 @@ public class Client {
                 } else if(response.startsWith("WIN")){
                     winner = response.substring(4);
                     break;
-                }else {
+                } else if (response.startsWith("CHAT")) {
+                    messageArea.append(response.substring(5) + "\n");
+                } else {
                     break;
                 }
             }
@@ -421,7 +460,7 @@ public class Client {
             // Set close operation
             client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             // Set size
-            client.frame.setSize(1000, 500);
+            client.frame.setSize(1000, 600);
             // Add menu bar
             client.setJMenuBar();
             // Set location to center of screen
