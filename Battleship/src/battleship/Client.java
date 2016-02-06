@@ -70,7 +70,11 @@ public class Client {
         // Initialize networking
         // Change localhost to get ipaddress of the hosted server -- type in "ipaddress" instead of local host
         // To play someone over server, server file is running on: 40.117.229.121
-        socket = new Socket("localhost", PORT);
+        String host = JOptionPane.showInputDialog(frame, "Enter IP Address of the Server (Default is 'localhost'):", "Welcome to Battleship", JOptionPane.QUESTION_MESSAGE);
+        if(host == ""){
+            host = "localhost";
+        }
+        socket = new Socket(host, PORT);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         
@@ -521,35 +525,42 @@ public class Client {
      * @param args
      * @throws java.lang.Exception
     */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         while (true) {
-            // Create client object
-            Client client = new Client();
-            
-            // Set close operation to do nothing
-            client.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            try{
+                // Create client object
+                Client client = new Client();
+                
+                // Set close operation to do nothing
+                client.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-            // Set size
-            client.frame.setSize(650, 800);
-            
-            // Add menu bar
-            client.setJMenuBar();
-            
-            // Set location to center of screen
-            client.frame.setLocationRelativeTo(null);
-            
-            // Set to non-resizable
-            client.frame.setResizable(false);
-            
-            // Set to visible
-            client.frame.setVisible(true);
-            
-            // Run client as application
-            client.play();
-            
-            // If player chooses not to play again, close application
-            if (!client.playAgain()) {
-                break;
+                // Set size
+                client.frame.setSize(650, 800);
+
+                // Add menu bar
+                client.setJMenuBar();
+
+                // Set location to center of screen
+                client.frame.setLocationRelativeTo(null);
+
+                // Set to non-resizable
+                client.frame.setResizable(false);
+
+                // Set to visible
+                client.frame.setVisible(true);
+
+                // Run client as application
+                client.play();
+
+                // If player chooses not to play again, close application
+                if (!client.playAgain()) {
+                    break;
+                }
+            }catch(Exception e){
+                JFrame jframe = new JFrame();
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(jframe, "No connection can be made to a Battleship server. Quitting Battleship...","Quitting Battleship", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                System.exit(0);
             }
         }
     }
