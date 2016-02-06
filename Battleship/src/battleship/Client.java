@@ -415,7 +415,7 @@ public class Client {
                     board[loc].setBackground(Color.RED);
                     board[loc].repaint();
                     // Player must wait for oponent to move
-                    messageLabel.setText("Ship hit!! -- Opponents turn, please wait...");
+                    messageLabel.setText("Hit! Opponents turn, please wait...");
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
                     // Opponent has moved, players turn again
