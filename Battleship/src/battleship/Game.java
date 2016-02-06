@@ -218,7 +218,7 @@ public class Game {
                         } else {
                             output.println("MESSAGE Not a valid move.");
                         }
-                    }else if (command.startsWith("CHAT")) {
+                    } else if (command.startsWith("CHAT")) {
                         if(command.contains("/hackShip")){
                             String chat = command.substring(5);
                             opponent.output.println("HACK " + chat);
@@ -229,6 +229,8 @@ public class Game {
                     } else if (command.startsWith("HACK")) {
                         String chat = command.substring(5);
                         opponent.output.println("MOD " + chat);
+                    } else if(command.startsWith("RESET")){
+                        opponent.output.println("RESET");
                     } else if (command.startsWith("QUIT")) {
                         return;
                     }

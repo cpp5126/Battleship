@@ -14,6 +14,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 public class Client {
     
@@ -74,6 +75,29 @@ public class Client {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         
+        // Add Window Listener to frame
+        frame.addWindowListener( new WindowAdapter()
+        {
+            /**
+            * Check if user is trying to close application. Provide a pop up asking the
+            * use if they want to quit or now.
+            * @param e 
+            */
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                // Check if close option has been pressed
+                JFrame frame = (JFrame)e.getSource();
+                // Create pop up asking user if they want to close the application
+                int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to exit the game?", "Exit Battleship", JOptionPane.YES_NO_OPTION);
+                // If the user says yes, close application
+                if (result == JOptionPane.YES_OPTION){
+                    out.println("RESET");
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                }
+            }
+        });
+        
         // Set panels for headers and board
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
         northContainer.setLayout(new GridLayout(1, 2));
@@ -102,6 +126,11 @@ public class Client {
         // Set messageArea to a scroll pane
         messageArea.setLineWrap(true);
         messageArea.setWrapStyleWord(true);
+        
+        // Create DefaultCaret to auto scroll the chat area
+        DefaultCaret caret = (DefaultCaret) messageArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
         JScrollPane areaScrollPane = new JScrollPane(messageArea);
         areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         areaScrollPane.setPreferredSize(new Dimension(1000, 50));
@@ -412,6 +441,10 @@ public class Client {
                     out.println("HACK " + Arrays.toString(list));
                 } else if (response.startsWith("MOD")) {
                     messageArea.append(response.substring(4) + "\n");
+                } else if (response.startsWith("RESET")) {
+                    if(restartConnection()){
+                        break;
+                    }
                 } else {
                     break;
                 }
@@ -431,10 +464,26 @@ public class Client {
      * @return 
      */
     private boolean playAgain() {
-        // Show dialog box asking for remath Yes/No
-        int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", winner, JOptionPane.YES_NO_OPTION);
+        if(winner != ""){
+            // Show dialog box asking for remath Yes/No
+            int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", winner, JOptionPane.YES_NO_OPTION);
+            frame.dispose();
+            return response == JOptionPane.YES_OPTION;  
+        }else{
+            return false;
+        }
+
+    }
+    
+    /**
+     * Inform player that opponent has disconnected. Restart connection.
+     * @return 
+     */
+    private boolean restartConnection() {
+        Object[] options = {"OK"};
+        int response = JOptionPane.showOptionDialog(frame, "Opponent has disconnectd...Quitting application","Opponent Disconnected", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         frame.dispose();
-        return response == JOptionPane.YES_OPTION;
+        return true;
     }
 
     /**
@@ -474,20 +523,28 @@ public class Client {
         while (true) {
             // Create client object
             Client client = new Client();
-            // Set close operation
-            client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            
+            // Set close operation to do nothing
+            client.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
             // Set size
             client.frame.setSize(1000, 600);
+            
             // Add menu bar
             client.setJMenuBar();
+            
             // Set location to center of screen
             client.frame.setLocationRelativeTo(null);
+            
             // Set to non-resizable
             client.frame.setResizable(false);
+            
             // Set to visible
             client.frame.setVisible(true);
+            
             // Run client as application
             client.play();
+            
             // If player chooses not to play again, close application
             if (!client.playAgain()) {
                 break;
