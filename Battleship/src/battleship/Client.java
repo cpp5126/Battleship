@@ -125,6 +125,7 @@ public class Client {
         // Set messageArea to a scroll pane
         messageArea.setLineWrap(true);
         messageArea.setWrapStyleWord(true);
+        messageArea.setEditable(false);
         
         // Create DefaultCaret to auto scroll the chat area
         DefaultCaret caret = (DefaultCaret) messageArea.getCaret();
