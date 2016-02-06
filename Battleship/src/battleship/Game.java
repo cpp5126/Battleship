@@ -189,6 +189,9 @@ public class Game {
             try {
                 // Thread starts once both players have connected.
                 output.println("MESSAGE All players connected");
+                // Add quick instructions/explanation to game and GUI design
+                output.println("CHAT Welcome to Battleship! The dark grey board is where you select to fire at your opponents ships. The light grey board is where your ships will be shown as well as your opponents shots against you."
+                        + " The blue squares indicate your ships and the red squares will indicate a hit on a ship.");
 
                 // Tell player 1 its their turn.
                 if (mark == '1') {
