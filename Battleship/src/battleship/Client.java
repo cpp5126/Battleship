@@ -355,15 +355,12 @@ public class Client {
         menuItem1 = new JMenuItem("Restart");
         
         // Add Action Listener to Restart option
-        menuItem1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Remove all from JFrame to rebuild it all
-                frame.getContentPane().removeAll();
-                /**
-                 * This menu item needs to be completed with proper restart functionality
-                 */
-            }
+        menuItem1.addActionListener((ActionEvent e) -> {
+            // Remove all from JFrame to rebuild it all
+            frame.getContentPane().removeAll();
+            /**
+             * This menu item needs to be completed with proper restart functionality
+             */
         });
         
         // Add menu items to "File" menu
@@ -373,13 +370,7 @@ public class Client {
         menuItem2 = new JMenuItem("Quit");
         
         // Add Action Listener to Restart option
-        menuItem2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Quit JFrame
-                System.exit(0);
-            }
-        });
+        menuItem2.addActionListener((ActionEvent e) -> { System.exit(0); });
         
         // Add menu items to "File" menu
         menu1.add(menuItem2);
@@ -523,7 +514,6 @@ public class Client {
     /**
     * Starts client. Runs the client as an application to communicate with the server.
      * @param args
-     * @throws java.lang.Exception
     */
     public static void main(String[] args){
         while (true) {
